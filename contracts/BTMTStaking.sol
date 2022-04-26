@@ -6,7 +6,6 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
 
@@ -18,7 +17,6 @@ contract BTMTStaking is
     Initializable,
     PausableUpgradeable,
     OwnableUpgradeable,
-    ERC721HolderUpgradeable,
     UUPSUpgradeable
 {
     address public rewardToken;
@@ -70,17 +68,18 @@ contract BTMTStaking is
         btmtCollection = _btmtCollection;
     }
 
-    function _releaseNFT(uint256 _tokenId) private {
+    function _releaseNFT(uint256 _tokenId, address _to) private {
+        require(_tokenOwner[_tokenId] == msg.sender, "Not owner");
         _tokenOwner[_tokenId] = address(0);
         IERC721Upgradeable(btmtCollection).transferFrom(
             address(this),
-            msg.sender,
+            _to,
             _tokenId
         );
     }
 
-    function stake(uint256 _tokenId, uint256 _duration) external {
-        //todo: require(...)
+    function stake(uint256 _tokenId, uint256 _duration) external whenNotPaused {
+        require(_tokenOwner[_tokenId] == address(0), "NFT is already staked");
 
         _tokenOwner[_tokenId] = msg.sender;
         IERC721Upgradeable(btmtCollection).transferFrom(
@@ -96,10 +95,8 @@ contract BTMTStaking is
         );
     }
 
-    function unStake(uint256 _tokenId) external {
-        //todo: require(...)
-
-        _releaseNFT(_tokenId);
+    function unStake(uint256 _tokenId) external whenNotPaused {
+        _releaseNFT(_tokenId, msg.sender);
         emit UnStake(_tokenId, msg.sender);
     }
 
@@ -107,11 +104,17 @@ contract BTMTStaking is
         uint256 _tokenId,
         uint256 _rewardAmount,
         bytes calldata _signature
-    ) external {
-        //todo: require(...)
-
+    ) external whenNotPaused {
         bytes32 ethSignedMessageHash = ECDSAUpgradeable.toEthSignedMessageHash(
-            keccak256(abi.encodePacked(_tokenId, _rewardAmount))
+            keccak256(
+                abi.encodePacked(
+                    _tokenId,
+                    _rewardAmount,
+                    msg.sender,
+                    operator,
+                    address(this)
+                )
+            )
         );
 
         require(
@@ -120,7 +123,7 @@ contract BTMTStaking is
             "invalid signature"
         );
 
-        _releaseNFT(_tokenId);
+        _releaseNFT(_tokenId, msg.sender);
 
         IRewardToken(rewardToken).mint(msg.sender, _rewardAmount);
 

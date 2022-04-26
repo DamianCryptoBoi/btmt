@@ -29,13 +29,13 @@ describe("Staking", function () {
     await rewardToken.setMinter(staking.address, true);
   });
 
-  const signMessage = async (signer, tokenId, amount) => {
+  const signMessage = async (tokenId, amount, owner, operator) => {
     const messageHash = ethers.utils.solidityKeccak256(
-      ["uint256", "uint256"],
-      [tokenId, amount]
+      ["uint256", "uint256", "address", "address", "address"],
+      [tokenId, amount, owner, operator.address, staking.address]
     );
 
-    const signature = await signer.signMessage(
+    const signature = await operator.signMessage(
       ethers.utils.arrayify(messageHash)
     );
 
@@ -59,6 +59,10 @@ describe("Staking", function () {
 
     expect(await nft.ownerOf(0)).to.equal(staking.address);
 
+    await expect(staking.connect(addr1).unStake(0)).to.be.revertedWith(
+      "Not owner"
+    );
+
     await staking.unStake(0);
 
     expect(await nft.ownerOf(0)).to.equal(owner.address);
@@ -70,7 +74,7 @@ describe("Staking", function () {
 
     await staking.connect(addr1).stake(0, 1);
 
-    const validSignature = await signMessage(owner, 0, 1000000);
+    const validSignature = await signMessage(0, 1000000, addr1.address, owner);
 
     await staking.connect(addr1).claim(0, 1000000, validSignature);
 

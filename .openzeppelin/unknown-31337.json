@@ -23,27 +23,27 @@
     },
     {
       "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-      "txHash": "0xa0cbbfb1609fe93ebccea075504abc86dd2108bd8d84966e83903d51ad6a5948",
+      "txHash": "0x8cf87e8a69cadc8e4bc3f749bd3c225dcdd7c4d1dfd805da6e3553832088e3ca",
       "kind": "uups"
     },
     {
       "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
-      "txHash": "0x5ceb5f8a702b0e071eafa4410a559c93dce74bf26cb372952e376e1dc0619b9e",
+      "txHash": "0xe8e91b86899a6a05684b6748a201629ce001b915bb9084eddd17d094715867aa",
       "kind": "uups"
     },
     {
       "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
-      "txHash": "0x2478793bddfd1bdc9ad247b24b9dae57bdda9ab176ff4c65ead99c5409e2a86f",
+      "txHash": "0x0074ffc61db81d6823fe5d6c8aec9a521d5bc5befc898017d64872b512269ff8",
       "kind": "uups"
     },
     {
       "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
-      "txHash": "0x35dcb5f675e40517dbdb396ebb631ceb32d78d8e2fc5034877e8b65c3b19b36a",
+      "txHash": "0x6025eb6b8e75b811728efde5b42f0ebe84e575fba641b1126475b6d29c71ff14",
       "kind": "uups"
     },
     {
       "address": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
-      "txHash": "0xa79381772922a17372fa60e7b0c3335041b78e92cbc83569c23a406961b07595",
+      "txHash": "0xb327eabed3a8ff63a46207576ebe8de31443aa380aec255ecf58cfdf1d1604cb",
       "kind": "uups"
     }
   ],
@@ -226,9 +226,9 @@
         }
       }
     },
-    "bba4a6feb0db12f9981c5c0aab5431c67bbfa84947346f921c16edb633aa7b02": {
+    "ad09f84d3987ee1f0917609bd1628b51d72303437a85326b95bdbc7afb693000": {
       "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-      "txHash": "0x435837b0505d7ac74969a5dad9a677b559436b946f789c50e47ddad9da3265d3",
+      "txHash": "0x56629a92cc2ab8f66d4ea26e4715716a6f4df8bd8ef97b41f209835f57400c99",
       "layout": {
         "storage": [
           {
@@ -292,21 +292,13 @@
             "offset": 0,
             "slot": "151",
             "type": "t_array(t_uint256)50_storage",
-            "contract": "ERC721HolderUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol:40"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "201",
-            "type": "t_array(t_uint256)50_storage",
             "contract": "ERC1967UpgradeUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
           },
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "251",
+            "slot": "201",
             "type": "t_array(t_uint256)50_storage",
             "contract": "UUPSUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
@@ -314,34 +306,34 @@
           {
             "label": "rewardToken",
             "offset": 0,
-            "slot": "301",
+            "slot": "251",
+            "type": "t_address",
+            "contract": "BTMTStaking",
+            "src": "contracts/BTMTStaking.sol:22"
+          },
+          {
+            "label": "btmtCollection",
+            "offset": 0,
+            "slot": "252",
+            "type": "t_address",
+            "contract": "BTMTStaking",
+            "src": "contracts/BTMTStaking.sol:23"
+          },
+          {
+            "label": "operator",
+            "offset": 0,
+            "slot": "253",
             "type": "t_address",
             "contract": "BTMTStaking",
             "src": "contracts/BTMTStaking.sol:24"
           },
           {
-            "label": "btmtCollection",
-            "offset": 0,
-            "slot": "302",
-            "type": "t_address",
-            "contract": "BTMTStaking",
-            "src": "contracts/BTMTStaking.sol:25"
-          },
-          {
-            "label": "operator",
-            "offset": 0,
-            "slot": "303",
-            "type": "t_address",
-            "contract": "BTMTStaking",
-            "src": "contracts/BTMTStaking.sol:26"
-          },
-          {
             "label": "_tokenOwner",
             "offset": 0,
-            "slot": "304",
+            "slot": "254",
             "type": "t_mapping(t_uint256,t_address)",
             "contract": "BTMTStaking",
-            "src": "contracts/BTMTStaking.sol:28"
+            "src": "contracts/BTMTStaking.sol:26"
           }
         ],
         "types": {
