@@ -25,16 +25,15 @@ contract BTMTStaking is
 
     mapping(uint256 => address) private _tokenOwner;
 
-    event Stake(
+    event Stake(uint256 indexed tokenId, address owner);
+
+    event UnStake(uint256 indexed tokenId, uint256 rewardAmount, address owner);
+
+    event ClaimReward(
         uint256 indexed tokenId,
-        uint256 startTime,
-        uint256 endTime,
+        uint256 rewardAmount,
         address owner
     );
-
-    event UnStake(uint256 indexed tokenId, address owner);
-
-    event Claim(uint256 indexed tokenId, uint256 rewardAmount, address owner);
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() initializer {}
@@ -68,8 +67,7 @@ contract BTMTStaking is
         btmtCollection = _btmtCollection;
     }
 
-    function _releaseNFT(uint256 _tokenId, address _to) private {
-        require(_tokenOwner[_tokenId] == msg.sender, "Not owner");
+    function _releaseNFT(uint256 _tokenId, address _to) internal {
         _tokenOwner[_tokenId] = address(0);
         IERC721Upgradeable(btmtCollection).transferFrom(
             address(this),
@@ -78,33 +76,12 @@ contract BTMTStaking is
         );
     }
 
-    function stake(uint256 _tokenId, uint256 _duration) external whenNotPaused {
-        require(_tokenOwner[_tokenId] == address(0), "NFT is already staked");
-
-        _tokenOwner[_tokenId] = msg.sender;
-        IERC721Upgradeable(btmtCollection).transferFrom(
-            msg.sender,
-            address(this),
-            _tokenId
-        );
-        emit Stake(
-            _tokenId,
-            block.timestamp,
-            block.timestamp + _duration,
-            msg.sender
-        );
-    }
-
-    function unStake(uint256 _tokenId) external whenNotPaused {
-        _releaseNFT(_tokenId, msg.sender);
-        emit UnStake(_tokenId, msg.sender);
-    }
-
-    function claim(
+    function _verifySignature(
         uint256 _tokenId,
         uint256 _rewardAmount,
-        bytes calldata _signature
-    ) external whenNotPaused {
+        bytes memory _signature
+    ) internal view {
+        require(_tokenOwner[_tokenId] == msg.sender, "Not owner");
         bytes32 ethSignedMessageHash = ECDSAUpgradeable.toEthSignedMessageHash(
             keccak256(
                 abi.encodePacked(
@@ -122,12 +99,39 @@ contract BTMTStaking is
                 ECDSAUpgradeable.recover(ethSignedMessageHash, _signature),
             "invalid signature"
         );
+    }
 
-        _releaseNFT(_tokenId, msg.sender);
+    function stake(uint256 _tokenId) external whenNotPaused {
+        require(_tokenOwner[_tokenId] == address(0), "NFT is already staked");
 
+        _tokenOwner[_tokenId] = msg.sender;
+        IERC721Upgradeable(btmtCollection).transferFrom(
+            msg.sender,
+            address(this),
+            _tokenId
+        );
+        emit Stake(_tokenId, msg.sender);
+    }
+
+    function unStake(
+        uint256 _tokenId,
+        uint256 _rewardAmount,
+        bytes calldata _signature
+    ) external whenNotPaused {
+        _verifySignature(_tokenId, _rewardAmount, _signature);
         IRewardToken(rewardToken).mint(msg.sender, _rewardAmount);
+        _releaseNFT(_tokenId, msg.sender);
+        emit UnStake(_tokenId, _rewardAmount, msg.sender);
+    }
 
-        emit Claim(_tokenId, _rewardAmount, msg.sender);
+    function claimReward(
+        uint256 _tokenId,
+        uint256 _rewardAmount,
+        bytes calldata _signature
+    ) external whenNotPaused {
+        _verifySignature(_tokenId, _rewardAmount, _signature);
+        IRewardToken(rewardToken).mint(msg.sender, _rewardAmount);
+        emit ClaimReward(_tokenId, _rewardAmount, msg.sender);
     }
 
     function _authorizeUpgrade(address newImplementation)

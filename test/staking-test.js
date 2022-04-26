@@ -46,37 +46,41 @@ describe("Staking", function () {
     await nft.safeMint(owner.address);
     await nft.setApprovalForAll(staking.address, true);
 
-    await staking.stake(0, 1);
+    await staking.stake(0);
 
     expect(await nft.ownerOf(0)).to.equal(staking.address);
   });
 
-  it("UnStake", async function () {
-    await nft.safeMint(owner.address);
-    await nft.setApprovalForAll(staking.address, true);
-
-    await staking.stake(0, 1);
-
-    expect(await nft.ownerOf(0)).to.equal(staking.address);
-
-    await expect(staking.connect(addr1).unStake(0)).to.be.revertedWith(
-      "Not owner"
-    );
-
-    await staking.unStake(0);
-
-    expect(await nft.ownerOf(0)).to.equal(owner.address);
-  });
-
-  it("Claim", async function () {
+  it("claim", async function () {
     await nft.connect(addr1).safeMint(addr1.address);
     await nft.connect(addr1).setApprovalForAll(staking.address, true);
 
-    await staking.connect(addr1).stake(0, 1);
+    await staking.connect(addr1).stake(0);
+
+    const validSignature = await signMessage(0, 10000, addr1.address, owner);
+
+    await staking.connect(addr1).claimReward(0, 10000, validSignature);
+
+    await expect(
+      staking.claimReward(0, 10000, validSignature)
+    ).to.be.revertedWith("Not owner");
+
+    expect(await nft.ownerOf(0)).to.equal(staking.address);
+
+    expect((await rewardToken.balanceOf(addr1.address)).toNumber()).to.equal(
+      10000
+    );
+  });
+
+  it("Unstake", async function () {
+    await nft.connect(addr1).safeMint(addr1.address);
+    await nft.connect(addr1).setApprovalForAll(staking.address, true);
+
+    await staking.connect(addr1).stake(0);
 
     const validSignature = await signMessage(0, 1000000, addr1.address, owner);
 
-    await staking.connect(addr1).claim(0, 1000000, validSignature);
+    await staking.connect(addr1).unStake(0, 1000000, validSignature);
 
     expect(await nft.ownerOf(0)).to.equal(addr1.address);
 
