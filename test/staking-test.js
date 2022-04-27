@@ -44,28 +44,33 @@ describe("Staking", function () {
 
   it("Stake", async function () {
     await nft.safeMint(owner.address);
+
+    expect(await nft.tokenURI(1)).to.equal(
+      "ipfs://QmQJaLuKpwpc5d9aMuLnvqcr5w6qDUNSbBJaULuvzwtvUf/1.json"
+    );
+
     await nft.setApprovalForAll(staking.address, true);
 
-    await staking.stake(0);
+    await staking.stake(1);
 
-    expect(await nft.ownerOf(0)).to.equal(staking.address);
+    expect(await nft.ownerOf(1)).to.equal(staking.address);
   });
 
   it("claim", async function () {
     await nft.connect(addr1).safeMint(addr1.address);
     await nft.connect(addr1).setApprovalForAll(staking.address, true);
 
-    await staking.connect(addr1).stake(0);
+    await staking.connect(addr1).stake(1);
 
-    const validSignature = await signMessage(0, 10000, addr1.address, owner);
+    const validSignature = await signMessage(1, 10000, addr1.address, owner);
 
-    await staking.connect(addr1).claimReward(0, 10000, validSignature);
+    await staking.connect(addr1).claimReward(1, 10000, validSignature);
 
     await expect(
-      staking.claimReward(0, 10000, validSignature)
+      staking.claimReward(1, 10000, validSignature)
     ).to.be.revertedWith("Not owner");
 
-    expect(await nft.ownerOf(0)).to.equal(staking.address);
+    expect(await nft.ownerOf(1)).to.equal(staking.address);
 
     expect((await rewardToken.balanceOf(addr1.address)).toNumber()).to.equal(
       10000
@@ -76,13 +81,13 @@ describe("Staking", function () {
     await nft.connect(addr1).safeMint(addr1.address);
     await nft.connect(addr1).setApprovalForAll(staking.address, true);
 
-    await staking.connect(addr1).stake(0);
+    await staking.connect(addr1).stake(1);
 
-    const validSignature = await signMessage(0, 1000000, addr1.address, owner);
+    const validSignature = await signMessage(1, 1000000, addr1.address, owner);
 
-    await staking.connect(addr1).unStake(0, 1000000, validSignature);
+    await staking.connect(addr1).unStake(1, 1000000, validSignature);
 
-    expect(await nft.ownerOf(0)).to.equal(addr1.address);
+    expect(await nft.ownerOf(1)).to.equal(addr1.address);
 
     expect((await rewardToken.balanceOf(addr1.address)).toNumber()).to.equal(
       1000000
