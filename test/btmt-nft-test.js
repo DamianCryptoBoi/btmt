@@ -30,10 +30,25 @@ describe("BTMT nft", function () {
         expect(sp).to.equal(false)
       })
 
+      it("Check URI", async () => {
+        await expect(nft.tokenURI(100)).to.be.reverted;
+      })
+
   })
 
   describe("Check mint NFT", () => {
-      
+    it("Check safeMintMultiple not owner", async () => {
+      await expect(
+        nft.connect(addr1).safeMintMultiple(addr2.address, 3)
+      ).to.be.reverted
+
+    })
+    it("Check safeMintMultiple owner", async () => {
+        await nft.connect(owner).safeMintMultiple(addr2.address, 3);
+        const ad = await  nft.ownerOf(2)
+        expect(ad).to.equal(addr2.address)
+
+    })
   })
 
 

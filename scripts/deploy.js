@@ -1,5 +1,6 @@
 const { ethers } = require("hardhat");
 
+const TREASURY_WALLET = "0x073cd8D92D058FAa97CB958829a0C9c86578C4dA";
 async function main() {
   console.log("Starting...");
   [owner] = await ethers.getSigners();
@@ -16,7 +17,7 @@ async function main() {
   });
   await rewardToken.deployed();
 
-  console.log("Reward Token: " + rewardToken);
+  console.log("Reward Token: " + rewardToken.address);
 
   Staking = await ethers.getContractFactory("BTMTStaking");
   staking = await upgrades.deployProxy(
@@ -28,10 +29,17 @@ async function main() {
   );
   await staking.deployed();
 
-  console.log("Staking: " + staking);
+  console.log("Staking: " + staking.address);
 
   //settings
+  console.log("set minter");
   await rewardToken.setMinter(staking.address, true);
+  console.log("mint all nft to treasury");
+  for (let i = 0; i < 10; i++) {
+    await nft.safeMintMultiple(TREASURY_WALLET, 100);
+    console.log("minted: " + 100 * (i + 1));
+  }
+  await nft.safeMintMultiple(TREASURY_WALLET, 100);
 
   console.log("DONE");
 }

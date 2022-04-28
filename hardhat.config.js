@@ -30,6 +30,7 @@ module.exports = {
       url: "https://public-node-api.klaytnapi.com/v1/cypress",
       accounts: [process.env.PRIVATE_KEY],
       chainId: 8217,
+      gasLimit: "1000000000000",
     },
   },
   gasReporter: {

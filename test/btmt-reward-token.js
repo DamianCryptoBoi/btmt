@@ -14,10 +14,10 @@ describe("BTMT reward token", function () {
   });
 
   describe("Check static info", () => {
-    beforeEach(async () =>{
-      // await rewardToken.initialize()
+    // beforeEach(async () =>{
+    //   // await rewardToken.initialize()
 
-    })
+    // })
     it("Check re initialize: It should be reverted", async () => {
       await expect(
         rewardToken.initialize()
@@ -89,6 +89,7 @@ describe("BTMT reward token", function () {
       const balance = await rewardToken.balanceOf(addr1.address)
       expect(balance.toString()).to.equal('1000')
     })
+   
   })
 
   describe("Check transfer token", () => {
