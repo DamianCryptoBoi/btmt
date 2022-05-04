@@ -22,6 +22,7 @@ contract BTMTStaking is
     address public rewardToken;
     address public btmtCollection;
     address public operator;
+    mapping(uint256 => bool) public executedReward; // nonce
 
     mapping(uint256 => address) private _tokenOwner;
 
@@ -79,9 +80,11 @@ contract BTMTStaking is
     function _verifySignature(
         uint256 _tokenId,
         uint256 _rewardAmount,
+        uint256 _nonce,
         bytes memory _signature
     ) internal view {
         require(_tokenOwner[_tokenId] == msg.sender, "Not owner");
+        require(!executedReward[_nonce], "Reward executed");
         bytes32 ethSignedMessageHash = ECDSAUpgradeable.toEthSignedMessageHash(
             keccak256(
                 abi.encodePacked(
@@ -89,7 +92,8 @@ contract BTMTStaking is
                     _rewardAmount,
                     msg.sender,
                     operator,
-                    address(this)
+                    address(this),
+                    _nonce
                 )
             )
         );
@@ -116,9 +120,11 @@ contract BTMTStaking is
     function unStake(
         uint256 _tokenId,
         uint256 _rewardAmount,
+        uint256 _nonce,
         bytes calldata _signature
     ) external whenNotPaused {
-        _verifySignature(_tokenId, _rewardAmount, _signature);
+        _verifySignature(_tokenId, _rewardAmount, _nonce, _signature);
+        executedReward[_nonce] = true;
         IRewardToken(rewardToken).mint(msg.sender, _rewardAmount);
         _releaseNFT(_tokenId, msg.sender);
         emit UnStake(_tokenId, _rewardAmount, msg.sender);
@@ -127,9 +133,11 @@ contract BTMTStaking is
     function claimReward(
         uint256 _tokenId,
         uint256 _rewardAmount,
+        uint256 _nonce,
         bytes calldata _signature
     ) external whenNotPaused {
-        _verifySignature(_tokenId, _rewardAmount, _signature);
+        _verifySignature(_tokenId, _rewardAmount, _nonce, _signature);
+        executedReward[_nonce] = true;
         IRewardToken(rewardToken).mint(msg.sender, _rewardAmount);
         emit ClaimReward(_tokenId, _rewardAmount, msg.sender);
     }
