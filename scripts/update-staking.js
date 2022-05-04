@@ -7,7 +7,7 @@ async function main() {
 
   Staking = await ethers.getContractFactory("BTMTStaking");
 
-  await upgrades.forceImport(STAKING_CONTRACT, Staking, { kind: "uups" });
+  //   await upgrades.forceImport(STAKING_CONTRACT, Staking, { kind: "uups" });
 
   const stakingV2 = await upgrades.upgradeProxy(STAKING_CONTRACT, Staking); // just test
 

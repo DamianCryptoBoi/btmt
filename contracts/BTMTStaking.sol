@@ -22,18 +22,26 @@ contract BTMTStaking is
     address public rewardToken;
     address public btmtCollection;
     address public operator;
-    mapping(uint256 => bool) public executedReward; // nonce
+    address public treasuryWallet;
+
+    mapping(address => mapping(uint256 => bool)) public executedReward; // address => nonce => executed
 
     mapping(uint256 => address) private _tokenOwner;
 
     event Stake(uint256 indexed tokenId, address owner);
 
-    event UnStake(uint256 indexed tokenId, uint256 rewardAmount, address owner);
+    event UnStake(
+        uint256 indexed tokenId,
+        uint256 rewardAmount,
+        address owner,
+        uint256 nonce
+    );
 
     event ClaimReward(
         uint256 indexed tokenId,
         uint256 rewardAmount,
-        address owner
+        address owner,
+        uint256 nonce
     );
 
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -42,7 +50,8 @@ contract BTMTStaking is
     function initialize(
         address _rewardToken,
         address _btmtCollection,
-        address _operator
+        address _operator,
+        address _treasuryWallet
     ) public initializer {
         __Pausable_init();
         __Ownable_init();
@@ -50,6 +59,7 @@ contract BTMTStaking is
         rewardToken = _rewardToken;
         btmtCollection = _btmtCollection;
         operator = _operator;
+        treasuryWallet = _treasuryWallet;
     }
 
     function pause() public onlyOwner {
@@ -84,7 +94,7 @@ contract BTMTStaking is
         bytes memory _signature
     ) internal view {
         require(_tokenOwner[_tokenId] == msg.sender, "Not owner");
-        require(!executedReward[_nonce], "Reward executed");
+        require(!executedReward[msg.sender][_nonce], "Reward executed");
         bytes32 ethSignedMessageHash = ECDSAUpgradeable.toEthSignedMessageHash(
             keccak256(
                 abi.encodePacked(
@@ -124,10 +134,14 @@ contract BTMTStaking is
         bytes calldata _signature
     ) external whenNotPaused {
         _verifySignature(_tokenId, _rewardAmount, _nonce, _signature);
-        executedReward[_nonce] = true;
-        IRewardToken(rewardToken).mint(msg.sender, _rewardAmount);
+        executedReward[msg.sender][_nonce] = true;
+        IRewardToken(rewardToken).transferFrom(
+            treasuryWallet,
+            msg.sender,
+            _rewardAmount
+        );
         _releaseNFT(_tokenId, msg.sender);
-        emit UnStake(_tokenId, _rewardAmount, msg.sender);
+        emit UnStake(_tokenId, _rewardAmount, msg.sender, _nonce);
     }
 
     function claimReward(
@@ -137,9 +151,13 @@ contract BTMTStaking is
         bytes calldata _signature
     ) external whenNotPaused {
         _verifySignature(_tokenId, _rewardAmount, _nonce, _signature);
-        executedReward[_nonce] = true;
-        IRewardToken(rewardToken).mint(msg.sender, _rewardAmount);
-        emit ClaimReward(_tokenId, _rewardAmount, msg.sender);
+        executedReward[msg.sender][_nonce] = true;
+        IRewardToken(rewardToken).transferFrom(
+            treasuryWallet,
+            msg.sender,
+            _rewardAmount
+        );
+        emit ClaimReward(_tokenId, _rewardAmount, msg.sender, _nonce);
     }
 
     function _authorizeUpgrade(address newImplementation)

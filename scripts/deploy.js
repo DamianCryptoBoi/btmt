@@ -1,4 +1,4 @@
-const { ethers } = require("hardhat");
+const { ethers, upgrades } = require("hardhat");
 
 const TREASURY_WALLET = "0x073cd8D92D058FAa97CB958829a0C9c86578C4dA";
 async function main() {

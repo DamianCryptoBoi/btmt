@@ -3,7 +3,7 @@ const { ethers, upgrades } = require("hardhat");
 
 describe("Staking", function () {
   beforeEach(async () => {
-    [owner, addr1, addr2, addr3] = await ethers.getSigners();
+    [owner, addr1, addr2, addr3, treasury] = await ethers.getSigners();
 
     NFT = await ethers.getContractFactory("BTMTCollection");
     nft = await NFT.deploy();
@@ -18,7 +18,7 @@ describe("Staking", function () {
     Staking = await ethers.getContractFactory("BTMTStaking");
     staking = await upgrades.deployProxy(
       Staking,
-      [rewardToken.address, nft.address, owner.address],
+      [rewardToken.address, nft.address, owner.address, treasury.address],
       {
         kind: "uups",
       }
@@ -26,7 +26,20 @@ describe("Staking", function () {
     await staking.deployed();
 
     //settings
-    await rewardToken.setMinter(staking.address, true);
+
+    await rewardToken.setMinter(owner.address, true);
+
+    await rewardToken.mint(
+      treasury.address,
+      ethers.utils.parseEther("10000000000000000000000")
+    );
+
+    await rewardToken
+      .connect(treasury)
+      .approve(
+        staking.address,
+        ethers.utils.parseEther("10000000000000000000000")
+      );
   });
 
   const signMessage = async (tokenId, amount, owner, operator, nonce) => {

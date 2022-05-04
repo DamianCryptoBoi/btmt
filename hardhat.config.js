@@ -23,12 +23,12 @@ module.exports = {
   networks: {
     baobab: {
       url: "https://public-node-api.klaytnapi.com/v1/baobab",
-      accounts: [process.env.PRIVATE_KEY],
+      accounts: [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_TREASURY],
       chainId: 1001,
     },
     klaytn: {
       url: "https://public-node-api.klaytnapi.com/v1/cypress",
-      accounts: [process.env.PRIVATE_KEY],
+      accounts: [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_TREASURY],
       chainId: 8217,
       gasLimit: "1000000000000",
     },
