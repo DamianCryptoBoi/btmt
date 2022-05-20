@@ -21,10 +21,17 @@ module.exports = {
     ],
   },
   networks: {
+    hardhat: {
+      forking: {
+        url: "https://public-node-api.klaytnapi.com/v1/baobab",
+      },
+    },
     baobab: {
       url: "https://public-node-api.klaytnapi.com/v1/baobab",
       accounts: [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_TREASURY],
       chainId: 1001,
+      gas: "auto",
+      gasLimit: "1000000000000",
     },
     klaytn: {
       url: "https://public-node-api.klaytnapi.com/v1/cypress",

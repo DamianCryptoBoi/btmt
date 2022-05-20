@@ -5,13 +5,13 @@ async function main() {
   console.log("Starting...");
   [owner] = await ethers.getSigners();
 
-  Staking = await ethers.getContractFactory("BTMTStaking");
+  const Staking = await ethers.getContractFactory("BTMTStaking");
 
   //   await upgrades.forceImport(STAKING_CONTRACT, Staking, { kind: "uups" });
 
   const stakingV2 = await upgrades.upgradeProxy(STAKING_CONTRACT, Staking); // just test
 
-  console.log("DONE");
+  console.log(upgrades);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

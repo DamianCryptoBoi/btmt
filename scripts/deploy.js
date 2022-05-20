@@ -35,18 +35,20 @@ async function main() {
   console.log("set minter");
   await rewardToken.setMinter(staking.address, true);
   console.log("mint all nft to treasury");
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 100; i++) {
     await nft.safeMintMultiple(TREASURY_WALLET, 100);
     console.log("minted: " + 100 * (i + 1));
   }
-  await nft.safeMintMultiple(TREASURY_WALLET, 100);
+  // await nft.safeMintMultiple(TREASURY_WALLET, 100);
 
   console.log("DONE");
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+// main().catch((error) => {
+// console.error(error);
+// process.exitCode = 1;
+// });
+//
+//0x52608040b30BfC1a9fbD27e780e1B9A775f5f4fa
