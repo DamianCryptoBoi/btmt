@@ -29,6 +29,7 @@ contract BTMTRewardToken is
         __Pausable_init();
         __Ownable_init();
         __UUPSUpgradeable_init();
+        _mint(msg.sender, 1000000 * 10**decimals());
     }
 
     function pause() public onlyOwner {
@@ -37,14 +38,6 @@ contract BTMTRewardToken is
 
     function unpause() public onlyOwner {
         _unpause();
-    }
-
-    function setMinter(address minter, bool canMint) external onlyOwner {
-        isMinter[minter] = canMint;
-    }
-
-    function mint(address to, uint256 amount) public onlyMinter {
-        _mint(to, amount);
     }
 
     function _beforeTokenTransfer(

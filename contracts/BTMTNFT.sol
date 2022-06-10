@@ -13,12 +13,10 @@ contract BTMTCollection is ERC721, ERC721Enumerable, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
-    constructor() ERC721("BTMT Collection", "BTMT") {
-        // _tokenIdCounter.increment(); //starts with id = 1
-    }
+    constructor() ERC721("BTMT TEST Collection", "BTMT") {}
 
     function _baseURI() internal pure override returns (string memory) {
-        return "ipfs://QmXDrZTh8uRNLASFm3detYAUotqvTE6kJfgB2VRNVMYC9p/";
+        return "ipfs://QmQ1JWutU1raBpPa5idxPygyZGe6fL8HWuBThb4FAFiEqQ/";
     }
 
     function tokenURI(uint256 tokenId)

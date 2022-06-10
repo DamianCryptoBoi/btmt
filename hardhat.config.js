@@ -21,27 +21,40 @@ module.exports = {
     ],
   },
   networks: {
-    hardhat: {
-      forking: {
-        url: "https://public-node-api.klaytnapi.com/v1/baobab",
-      },
-    },
-    baobab: {
-      url: "https://public-node-api.klaytnapi.com/v1/baobab",
-      accounts: [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_TREASURY],
-      chainId: 1001,
-      gas: "auto",
-      gasLimit: "1000000000000",
-    },
-    klaytn: {
-      url: "https://public-node-api.klaytnapi.com/v1/cypress",
-      accounts: [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_TREASURY],
-      chainId: 8217,
-      gasLimit: "1000000000000",
+    // hardhat: {
+    // },
+    // baobab: {
+    //   url: "https://public-node-api.klaytnapi.com/v1/baobab",
+    //   accounts: [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_TREASURY],
+    //   chainId: 1001,
+    //   gas: "auto",
+    //   gasLimit: "1000000000000",
+    // },
+    // klaytn: {
+    //   url: "https://public-node-api.klaytnapi.com/v1/cypress",
+    //   accounts: [
+    //     process.env.PRIVATE_KEY_MAIN,
+    //     process.env.PRIVATE_KEY_TREASURY_MAIN,
+    //   ],
+    //   chainId: 8217,
+    //   // gasLimit: "1000000000000",
+    //   gasPrice: 250000000000,
+    // },
+    rinkeby: {
+      url: process.env.PROVIDER_URL,
+      accounts: [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_TREASURY], // 0x257a7f986689Cc50cfef202fC5974AE2af251f80, 0x073cd8D92D058FAa97CB958829a0C9c86578C4dA
+      gas: 12000000,
+      blockGasLimit: 0x1fffffffffffff,
+      allowUnlimitedContractSize: true,
+      timeout: 1800000,
     },
   },
   gasReporter: {
-    enabled: false,
+    enabled: true,
     currency: "USD",
+  },
+
+  etherscan: {
+    apiKey: "UVE477915DMJIFSVTM5V3FI9Z17WUBGE2M",
   },
 };

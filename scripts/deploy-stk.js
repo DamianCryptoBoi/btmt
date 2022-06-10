@@ -6,8 +6,16 @@ const erc20_abi =
 const nft_abi =
   require("../artifacts/contracts/BTMTNFT.sol/BTMTCollection.json").abi;
 
-const NFT_ADDRESS = "0x528e006268668aa5E0591A1B980810881f2198bb";
-const ERC20_ADDRESS = "0x1Ad78f576f634e645B158DC6B0d14c7a6D544F2A";
+const NFT_ADDRESS = "0xE3023C788210E39fCa91728e7621b82Dfb996683";
+const ERC20_ADDRESS = "0x723621de8C7d7a513d11451B42dCf88A6E9A6F95";
+
+// Collection: 0xE3023C788210E39fCa91728e7621b82Dfb996683
+// Reward Token: 0x723621de8C7d7a513d11451B42dCf88A6E9A6F95
+// Staking: 0x238cBAf3A5a400804e0cC1150e60E5b7bEf8a7f6
+
+const TREASURY_WALLET = "0x1Cb54FEcA29A7D4ce1566E0aF3b48C8D609A035C";
+
+const OPERATOR_WALLET = "0x257a7f986689Cc50cfef202fC5974AE2af251f80";
 
 async function main() {
   console.log("Starting...");
@@ -18,29 +26,22 @@ async function main() {
 
   const rewardToken = new ethers.Contract(ERC20_ADDRESS, erc20_abi, owner);
 
-  Staking = await ethers.getContractFactory("BTMTStaking");
-  staking = await upgrades.deployProxy(
-    Staking,
-    [rewardToken.address, nft.address, owner.address, TREASURY_WALLET],
-    {
-      kind: "uups",
-    }
-  );
-  await staking.deployed();
+  // Staking = await ethers.getContractFactory("BTMTStaking");
+  // staking = await upgrades.deployProxy(
+  //   Staking,
+  //   [rewardToken.address, nft.address, OPERATOR_WALLET, TREASURY_WALLET],
+  //   {
+  //     kind: "uups",
+  //   }
+  // );
+  // await staking.deployed();
 
-  console.log("Staking: " + staking.address);
-
-  //settings
-
-  await rewardToken.mint(
-    TREASURY_WALLET,
-    ethers.utils.parseEther("100000000000000000000000")
-  );
+  // console.log("Staking: " + staking.address);
 
   await rewardToken
     .connect(treasury)
     .approve(
-      staking.address,
+      "0x238cBAf3A5a400804e0cC1150e60E5b7bEf8a7f6",
       "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
     );
 

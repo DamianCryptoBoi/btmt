@@ -27,19 +27,14 @@ describe("Staking", function () {
 
     //settings
 
-    await rewardToken.setMinter(owner.address, true);
-
-    await rewardToken.mint(
+    await rewardToken.transfer(
       treasury.address,
-      ethers.utils.parseEther("10000000000000000000000")
+      ethers.utils.parseEther("1000000")
     );
 
     await rewardToken
       .connect(treasury)
-      .approve(
-        staking.address,
-        ethers.utils.parseEther("10000000000000000000000")
-      );
+      .approve(staking.address, ethers.utils.parseEther("100000"));
   });
 
   const signMessage = async (tokenId, amount, owner, operator, nonce) => {
@@ -60,36 +55,32 @@ describe("Staking", function () {
       await nft.safeMint(owner.address);
       await nft.setApprovalForAll(staking.address, true);
       await staking.pause();
-      await expect(staking.stake(1)).to.be.reverted;
+      await expect(staking.stake(0)).to.be.reverted;
       // unpause and restake
       await staking.unpause();
-      await staking.stake(1);
-      expect(await nft.ownerOf(1)).to.equal(staking.address);
+      await staking.stake(0);
+      expect(await nft.ownerOf(0)).to.equal(staking.address);
     });
 
     it("It should be revert when restake ", async function () {
       await nft.safeMint(owner.address);
       await nft.setApprovalForAll(staking.address, true);
 
-      await staking.stake(1);
+      await staking.stake(0);
 
-      expect(await nft.ownerOf(1)).to.equal(staking.address);
+      expect(await nft.ownerOf(0)).to.equal(staking.address);
 
-      await expect(staking.stake(1)).to.be.reverted;
+      await expect(staking.stake(0)).to.be.reverted;
     });
 
     it("It should be stake success", async function () {
       await nft.safeMint(owner.address);
 
-      expect(await nft.tokenURI(1)).to.equal(
-        "ipfs://QmQJaLuKpwpc5d9aMuLnvqcr5w6qDUNSbBJaULuvzwtvUf/1.json"
-      );
-
       await nft.setApprovalForAll(staking.address, true);
 
-      await staking.stake(1);
+      await staking.stake(0);
 
-      expect(await nft.ownerOf(1)).to.equal(staking.address);
+      expect(await nft.ownerOf(0)).to.equal(staking.address);
     });
   });
 
@@ -98,23 +89,23 @@ describe("Staking", function () {
       await nft.connect(addr1).safeMint(addr1.address);
       await nft.connect(addr1).setApprovalForAll(staking.address, true);
 
-      await staking.connect(addr1).stake(1);
+      await staking.connect(addr1).stake(0);
 
       const validSignature = await signMessage(
-        1,
+        0,
         10000,
         addr1.address,
         owner,
         1
       );
 
-      await staking.connect(addr1).claimReward(1, 10000, 1, validSignature);
+      await staking.connect(addr1).claimReward(0, 10000, 1, validSignature);
 
       await expect(
-        staking.claimReward(1, 10000, 1, validSignature)
+        staking.claimReward(0, 10000, 1, validSignature)
       ).to.be.revertedWith("Not owner");
 
-      expect(await nft.ownerOf(1)).to.equal(staking.address);
+      expect(await nft.ownerOf(0)).to.equal(staking.address);
 
       expect((await rewardToken.balanceOf(addr1.address)).toNumber()).to.equal(
         10000
@@ -125,10 +116,10 @@ describe("Staking", function () {
       await nft.connect(addr1).safeMint(addr1.address);
       await nft.connect(addr1).setApprovalForAll(staking.address, true);
 
-      await staking.connect(addr1).stake(1);
+      await staking.connect(addr1).stake(0);
 
       const validSignature = await signMessage(
-        1,
+        0,
         10000,
         addr1.address,
         owner,
@@ -138,17 +129,17 @@ describe("Staking", function () {
       // const paused = await staking.paused()
       // console.log(paused, "Paused ")
       await expect(
-        staking.connect(addr1).claimReward(1, 10000, 1, validSignature)
+        staking.connect(addr1).claimReward(0, 10000, 1, validSignature)
       ).to.be.reverted;
     });
     it("It should be revert because invalid signature", async function () {
       await nft.connect(addr1).safeMint(addr1.address);
       await nft.connect(addr1).setApprovalForAll(staking.address, true);
 
-      await staking.connect(addr1).stake(1);
+      await staking.connect(addr1).stake(0);
 
       const validSignature = await signMessage(
-        1,
+        0,
         10000,
         addr2.address,
         owner,
@@ -156,7 +147,7 @@ describe("Staking", function () {
       );
       await staking.pause();
       await expect(
-        staking.connect(addr1).claimReward(1, 1000, 1, validSignature)
+        staking.connect(addr1).claimReward(0, 1000, 1, validSignature)
       ).to.be.reverted;
     });
   });
@@ -166,19 +157,19 @@ describe("Staking", function () {
       await nft.connect(addr1).safeMint(addr1.address);
       await nft.connect(addr1).setApprovalForAll(staking.address, true);
 
-      await staking.connect(addr1).stake(1);
+      await staking.connect(addr1).stake(0);
 
       const validSignature = await signMessage(
-        1,
+        0,
         1000000,
         addr1.address,
         owner,
         1
       );
 
-      await staking.connect(addr1).unStake(1, 1000000, 1, validSignature);
+      await staking.connect(addr1).unStake(0, 1000000, 1, validSignature);
 
-      expect(await nft.ownerOf(1)).to.equal(addr1.address);
+      expect(await nft.ownerOf(0)).to.equal(addr1.address);
 
       expect((await rewardToken.balanceOf(addr1.address)).toNumber()).to.equal(
         1000000
@@ -189,17 +180,17 @@ describe("Staking", function () {
       await nft.connect(addr1).safeMint(addr1.address);
       await nft.connect(addr1).setApprovalForAll(staking.address, true);
 
-      await staking.connect(addr1).stake(1);
+      await staking.connect(addr1).stake(0);
 
       const validSignature = await signMessage(
-        1,
+        0,
         1000000,
         addr1.address,
         owner,
         1
       );
       await staking.pause();
-      await expect(staking.connect(addr1).unStake(1, 1000000, validSignature))
+      await expect(staking.connect(addr1).unStake(0, 1000000, validSignature))
         .to.be.reverted;
     });
 
@@ -207,27 +198,27 @@ describe("Staking", function () {
       await nft.connect(addr1).safeMint(addr1.address);
       await nft.connect(addr1).setApprovalForAll(staking.address, true);
 
-      await staking.connect(addr1).stake(1);
+      await staking.connect(addr1).stake(0);
 
       const validSignature = await signMessage(
-        1,
+        0,
         1000000,
         addr1.address,
         owner,
         1
       );
       const invalidSignature = await signMessage(
-        1,
+        0,
         1000000,
         owner.address,
         owner,
         2
       );
-      await expect(staking.connect(addr1).unStake(1, 100000, invalidSignature))
+      await expect(staking.connect(addr1).unStake(0, 100000, invalidSignature))
         .to.be.reverted;
 
       await staking.pause();
-      await expect(staking.connect(addr1).unStake(1, 100000, validSignature)).to
+      await expect(staking.connect(addr1).unStake(0, 100000, validSignature)).to
         .be.reverted;
     });
   });

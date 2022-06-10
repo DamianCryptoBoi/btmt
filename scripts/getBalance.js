@@ -6,17 +6,18 @@ async function main() {
   [owner] = await ethers.getSigners();
 
   const erc20 = new ethers.Contract(
-    "0x1Ad78f576f634e645B158DC6B0d14c7a6D544F2A",
+    "0x723621de8C7d7a513d11451B42dCf88A6E9A6F95",
     abi,
     owner
   );
 
   //   await erc20.setMinter(owner.address, true);
 
-  await erc20.mint(
-    "0x4749F09686e2D143F5d855a3ff2449d23681eE63",
-    ethers.utils.parseEther("1000000")
+  const balance = await erc20.balanceOf(
+    "0x1Cb54FEcA29A7D4ce1566E0aF3b48C8D609A035C"
   );
+
+  console.log(balance.toString());
 }
 
 // We recommend this pattern to be able to use async/await everywhere
