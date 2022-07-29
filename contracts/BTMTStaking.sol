@@ -9,10 +9,6 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
 
-interface IRewardToken is IERC20Upgradeable {
-    function mint(address to, uint256 amount) external;
-}
-
 contract BTMTStaking is
     Initializable,
     PausableUpgradeable,
@@ -143,7 +139,7 @@ contract BTMTStaking is
     ) external whenNotPaused {
         _verifySignature(_tokenId, _rewardAmount, _nonce, _signature);
         executedReward[msg.sender][_nonce] = true;
-        IRewardToken(rewardToken).transferFrom(
+        IERC20Upgradeable(rewardToken).transferFrom(
             treasuryWallet,
             msg.sender,
             _rewardAmount
@@ -160,7 +156,7 @@ contract BTMTStaking is
     ) external whenNotPaused {
         _verifySignature(_tokenId, _rewardAmount, _nonce, _signature);
         executedReward[msg.sender][_nonce] = true;
-        IRewardToken(rewardToken).transferFrom(
+        IERC20Upgradeable(rewardToken).transferFrom(
             treasuryWallet,
             msg.sender,
             _rewardAmount

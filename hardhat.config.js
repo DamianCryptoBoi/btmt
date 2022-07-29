@@ -23,13 +23,13 @@ module.exports = {
   networks: {
     // hardhat: {
     // },
-    // baobab: {
-    //   url: "https://public-node-api.klaytnapi.com/v1/baobab",
-    //   accounts: [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_TREASURY],
-    //   chainId: 1001,
-    //   gas: "auto",
-    //   gasLimit: "1000000000000",
-    // },
+    baobab: {
+      url: "https://public-node-api.klaytnapi.com/v1/baobab",
+      accounts: [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_TREASURY],
+      chainId: 1001,
+      gas: "auto",
+      gasLimit: "1000000000000",
+    },
     // klaytn: {
     //   url: "https://public-node-api.klaytnapi.com/v1/cypress",
     //   accounts: [
@@ -47,6 +47,18 @@ module.exports = {
       blockGasLimit: 0x1fffffffffffff,
       allowUnlimitedContractSize: true,
       timeout: 1800000,
+    },
+
+    mainnet: {
+      url: process.env.PROVIDER_URL_MAINNET,
+      accounts: [
+        process.env.PRIVATE_KEY_MAINNET,
+        process.env.PRIVATE_KEY_TREASURY_MAINNET,
+      ], // 0xf80da36C43daaCA3B39dDb766d0E4246088E823f, 0xdB053fCcaD709Ca19e8E17B0a6752EE365b905cC
+      chainId: 1,
+      // gas: 12000000,
+      // blockGasLimit: 0x1fffffffffffff,
+      // timeout: 1800000,
     },
   },
   gasReporter: {

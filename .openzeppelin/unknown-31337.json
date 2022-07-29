@@ -192,16 +192,6 @@
       "kind": "uups"
     },
     {
-      "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0x4ab406d4bd1f90b17f4db37def023a83bd656f9b8e78741877a407deae52cdcc",
-      "kind": "uups"
-    },
-    {
-      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-      "txHash": "0x3de00f1e5ffbc18ad6ec6929bc1a5b570ef83a743fa00f3363d2cac1da75bfde",
-      "kind": "uups"
-    },
-    {
       "address": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
       "txHash": "0x4ac37304ba5e160766b6c83d89a2cbea0f427b2e16363de67010e5169d52cf86",
       "kind": "uups"
@@ -339,6 +329,16 @@
     {
       "address": "0xBEc49fA140aCaA83533fB00A2BB19bDdd0290f25",
       "txHash": "0xe6a7ef39d61c21485bee987ca2c1e06aadf95197feec6831eea84a721d5d4f45",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+      "txHash": "0x4ab406d4bd1f90b17f4db37def023a83bd656f9b8e78741877a407deae52cdcc",
+      "kind": "uups"
+    },
+    {
+      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      "txHash": "0x3de00f1e5ffbc18ad6ec6929bc1a5b570ef83a743fa00f3363d2cac1da75bfde",
       "kind": "uups"
     }
   ],
@@ -523,7 +523,7 @@
     },
     "8a3e1f13bd3605195a4951b441c328f9f35d2c60d690128cdd48d00e7123b28d": {
       "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-      "txHash": "0xadf59d2acf32f72dc7676b1bb82be4f76881d4d033c52c8c76de13af76650c6f",
+      "txHash": "0x43787851016229439c93dc02550b7a9446840a2a795686b280c319718120c3a3",
       "layout": {
         "storage": [
           {
@@ -604,7 +604,7 @@
             "slot": "251",
             "type": "t_address",
             "contract": "BTMTStaking",
-            "src": "contracts/BTMTStaking.sol:22"
+            "src": "contracts/BTMTStaking.sol:18"
           },
           {
             "label": "btmtCollection",
@@ -612,7 +612,7 @@
             "slot": "252",
             "type": "t_address",
             "contract": "BTMTStaking",
-            "src": "contracts/BTMTStaking.sol:23"
+            "src": "contracts/BTMTStaking.sol:19"
           },
           {
             "label": "operator",
@@ -620,7 +620,7 @@
             "slot": "253",
             "type": "t_address",
             "contract": "BTMTStaking",
-            "src": "contracts/BTMTStaking.sol:24"
+            "src": "contracts/BTMTStaking.sol:20"
           },
           {
             "label": "treasuryWallet",
@@ -628,7 +628,7 @@
             "slot": "254",
             "type": "t_address",
             "contract": "BTMTStaking",
-            "src": "contracts/BTMTStaking.sol:25"
+            "src": "contracts/BTMTStaking.sol:21"
           },
           {
             "label": "executedReward",
@@ -636,7 +636,7 @@
             "slot": "255",
             "type": "t_mapping(t_address,t_mapping(t_uint256,t_bool))",
             "contract": "BTMTStaking",
-            "src": "contracts/BTMTStaking.sol:27"
+            "src": "contracts/BTMTStaking.sol:23"
           },
           {
             "label": "_tokenOwner",
@@ -644,7 +644,7 @@
             "slot": "256",
             "type": "t_mapping(t_uint256,t_address)",
             "contract": "BTMTStaking",
-            "src": "contracts/BTMTStaking.sol:29"
+            "src": "contracts/BTMTStaking.sol:25"
           }
         ],
         "types": {
